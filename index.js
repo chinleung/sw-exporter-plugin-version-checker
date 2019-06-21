@@ -2,18 +2,27 @@ const request = require('request');
 
 module.exports = {
     check (config) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             try {
                 this.validateConfigurations(config);
 
-                const latest = this.getLatestVersion(config);
+                request(
+                    this.getRequestOptions(config.repository),
+                    (error, response, body) => {
+                        if (error) {
+                            throw error;
+                        }
 
-                resolve({
-                    current: config.version,
-                    latest: latest,
-                    newest: latest == config.version,
-                    download_link: `${config.repository.url}/releases/latest`
-                });
+                        const latest = JSON.parse(body).tag_name.replace(/[^0-9.]/g, '');
+
+                        resolve({
+                            current: config.version,
+                            latest: latest,
+                            newest: latest == config.version,
+                            download_link: `${config.repository.url}/releases/latest`
+                        });
+                    }
+                );
             } catch (message) {
                 reject(message);
             }
@@ -27,7 +36,7 @@ module.exports = {
                     name: name,
                     source: 'plugin',
                     type: 'success',
-                    message: latest
+                    message: result.latest
                         ? `You have the latest version of ${name}.`
                         : `You have the version ${result.current} of ${name} and the latest version is ${result.latest}. Click <a href="${result.download_link}">here</a> to download the latest version.`
                 });
@@ -40,16 +49,6 @@ module.exports = {
                     message: error
                 });
             });
-    },
-
-    getLatestVersion (config) {
-        request(this.getRequestOptions(config.repository), (error, response, body) => {
-            if (error) {
-                throw error;
-            }
-
-            return JSON.parse(body).tag_name;
-        });
     },
 
     getRequestOptions (repository) {
