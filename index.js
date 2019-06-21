@@ -1,11 +1,9 @@
 const request = require('request');
 
 module.exports = {
-    check (package) {
+    check (config) {
         return new Promise(function (resolve, reject) {
             try {
-                const config = JSON.parse(package);
-
                 this.validateConfigurations(config);
 
                 const latest = this.getLatestVersion(config);
