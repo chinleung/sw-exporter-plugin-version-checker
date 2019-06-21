@@ -39,10 +39,10 @@ module.exports = {
                 options.proxy.log({
                     name: options.name,
                     source: 'plugin',
-                    type: 'success',
+                    type: result.latest ? 'success' : 'info',
                     message: result.latest
                         ? `You have the latest version v${result.current}.`
-                        : `Your current version is v${result.current} and the latest version is v${result.latest}. Click <a href="${result.download_link}">here</a> to download the latest version.`
+                        : `Your current version is v${result.current} and the latest version is v${result.newest}. Click <a href="${result.download_link}">here</a> to download the latest version.`
                 });
             })
             .catch(error => {
