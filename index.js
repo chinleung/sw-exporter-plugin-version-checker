@@ -29,11 +29,15 @@ module.exports = {
         });
     },
 
-    proceed (name, package, proxy) {
-        this.check(package)
+    proceed (options) {
+        if (! options || ! options.config || ! options.proxy) {
+            return;
+        }
+
+        this.check(options.config)
             .then(result => {
-                proxy.log({
-                    name: name,
+                options.proxy.log({
+                    name: options.name,
                     source: 'plugin',
                     type: 'success',
                     message: result.latest
@@ -42,8 +46,8 @@ module.exports = {
                 });
             })
             .catch(error => {
-                proxy.log({
-                    name: name,
+                options.proxy.log({
+                    name: options.name,
                     source: 'plugin',
                     type: 'error',
                     message: error
