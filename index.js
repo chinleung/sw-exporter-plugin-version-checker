@@ -41,7 +41,7 @@ module.exports = {
                     source: 'plugin',
                     type: 'success',
                     message: result.latest
-                        ? `You have the latest version of ${options.name} v${result.current}.`
+                        ? `You have the latest version (v${result.current}) of ${options.name}.`
                         : `You have the version ${result.current} of ${options.name} and the latest version is ${result.latest}. Click <a href="${result.download_link}">here</a> to download the latest version.`
                 });
             })
